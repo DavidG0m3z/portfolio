@@ -1,19 +1,74 @@
 ---
+interface Props {
+  title?: string;
+}
+const { title = "David Gómez · Backend Developer" } = Astro.props;
 ---
 
 <section id="inicio">
   <canvas id="code-bg"></canvas>
 
-  <div class="content">
-    <h1>David Ardila Gómez<span class="cursor">_</span></h1>
-    <p class="subtitle">BACKEND DEVELOPER · SPRING BOOT · MICROSERVICES</p>
-    <div class="ctas">
-      <a href="#proyectos" class="btn-primary">Ver proyectos</a>
-      <a href="#contacto" class="btn-secondary">Contactar</a>
+  <div class="container">
+    <div class="hero-content">
+
+      <div class="left">
+        <p class="eyebrow">Backend Developer · React Native · Fullstack</p>
+
+        <h1>
+          Backend Engineer especializado en
+          <span class="accent">Java, Spring Boot</span>
+          y arquitecturas distribuidas.
+        </h1>
+
+        <p class="description">
+          Diseño y desarrollo APIs escalables, microservicios y soluciones cloud
+          enfocadas en rendimiento, mantenibilidad y alta disponibilidad.
+        </p>
+
+        <div class="ctas">
+          <a href="#proyectos" class="btn-primary">Ver proyectos</a>
+          <a href="#contacto" class="btn-secondary">Contactar</a>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <span class="metric-value">2+</span>
+            <span class="metric-label">años de experiencia</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">5+</span>
+            <span class="metric-label">proyectos completados</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">99%</span>
+            <span class="metric-label">uptime promedio</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="photo-wrapper">
+          <div class="photo-terminal">
+            <div class="terminal-bar">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+              <span class="terminal-title">david@portfolio:~</span>
+            </div>
+            <div class="placeholder-photo">
+              <span>DG</span>
+            </div>
+          </div>
+          <div class="tech-tags">
+            <span>Java</span>
+            <span>Spring Boot</span>
+            <span>AWS</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
-
-  <a href="#stack" class="scroll-down">↓</a>
 </section>
 
 <script is:inline>
@@ -87,9 +142,6 @@
       '            throw new IllegalStateException("Transaction already reverted");',
       '        }',
       '',
-      '        Wallet origin = tx.getOriginWallet();',
-      '        Wallet destination = tx.getDestinationWallet();',
-      '',
       '        origin.setBalance(origin.getBalance().add(tx.getAmount()));',
       '        destination.setBalance(destination.getBalance().subtract(tx.getAmount()));',
       '',
@@ -99,40 +151,6 @@
       '        transactionRepository.save(tx);',
       '        walletRepository.save(origin);',
       '        walletRepository.save(destination);',
-      '    }',
-      '}',
-      '',
-      '// ',
-      '',
-      'package com.pagoya.wallet.controller;',
-      '',
-      'import org.springframework.web.bind.annotation.*;',
-      'import org.springframework.http.ResponseEntity;',
-      'import lombok.RequiredArgsConstructor;',
-      '',
-      '@RestController',
-      '@RequestMapping("/api/v1/transactions")',
-      '@RequiredArgsConstructor',
-      'public class TransactionController {',
-      '',
-      '    private final TransactionService transactionService;',
-      '',
-      '    @PostMapping("/transfer")',
-      '    public ResponseEntity<TransactionResponse> transfer(@RequestBody TransferRequest request) {',
-      '        return ResponseEntity.ok(transactionService.transfer(request));',
-      '    }',
-      '',
-      '    @GetMapping("/history/{walletId}")',
-      '    public ResponseEntity<Page<Transaction>> getHistory(',
-      '        @PathVariable Long walletId,',
-      '        Pageable pageable) {',
-      '        return ResponseEntity.ok(transactionService.getHistory(walletId, pageable));',
-      '    }',
-      '',
-      '    @PostMapping("/revert/{id}")',
-      '    public ResponseEntity<Void> revert(@PathVariable Long id) {',
-      '        transactionService.revert(id);',
-      '        return ResponseEntity.noContent().build();',
       '    }',
       '}',
     ];
@@ -160,20 +178,18 @@
       for (let i = 0; i < visibleLines; i++) {
         const lineIndex = (startLine + i) % code.length;
         const lineY = PADDING + (i * LINE_HEIGHT) - (y % LINE_HEIGHT);
-
         const line = code[lineIndex];
 
-        // color segun tipo de linea
         if (line.startsWith('//')) {
           ctx.fillStyle = 'rgba(100, 110, 120, 0.5)';
         } else if (line.startsWith('@')) {
-          ctx.fillStyle = 'rgba(130, 150, 170, 0.45)';
+          ctx.fillStyle = 'rgba(240, 165, 0, 0.2)';
         } else if (line.includes('public') || line.includes('private')) {
-          ctx.fillStyle = 'rgba(120, 140, 160, 0.4)';
+          ctx.fillStyle = 'rgba(120, 140, 160, 0.35)';
         } else if (line.trim() === '') {
           ctx.fillStyle = 'rgba(0,0,0,0)';
         } else {
-          ctx.fillStyle = 'rgba(110, 125, 140, 0.35)';
+          ctx.fillStyle = 'rgba(110, 125, 140, 0.3)';
         }
 
         ctx.fillText(line, PADDING, lineY);
@@ -181,7 +197,6 @@
 
       y += SPEED;
       if (y > totalHeight) y = 0;
-
       requestAnimationFrame(draw);
     }
 
@@ -191,17 +206,15 @@
   });
 </script>
 
-
 <style>
   section {
     position: relative;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
     background-color: var(--bg);
-
+    overflow: hidden;
+    padding-top: 60px;
   }
 
   canvas {
@@ -210,48 +223,61 @@
     opacity: 1;
   }
 
-  .content {
+  .container {
     position: relative;
     z-index: 1;
-    text-align: center;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    width: 100%;
+  }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  /* LEFT */
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--orange);
+    letter-spacing: 1px;
+    margin-bottom: 1.25rem;
   }
 
   h1 {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 700;
-    letter-spacing: -1px;
-    margin-bottom: 1rem;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+    color: var(--text);
   }
 
-  .cursor {
-    color: var(--blue);
-    animation: blink 1s step-end infinite;
-  }
+  .accent { color: var(--green); }
 
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0; }
-  }
-
-  .subtitle {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(0.75rem, 2vw, 0.95rem);
+  .description {
+    font-size: 1rem;
     color: var(--text-muted);
-    letter-spacing: 2px;
-    margin-bottom: 2.5rem;
+    max-width: 520px;
+    margin-bottom: 2rem;
+    line-height: 1.7;
   }
 
   .ctas {
     display: flex;
     gap: 1rem;
-    justify-content: center;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
   }
 
   .btn-primary {
     background: var(--blue);
-    color: #0D1117;
+    color: #080B0F;
     font-weight: 600;
-    padding: 0.65rem 1.6rem;
+    padding: 0.7rem 1.6rem;
     border-radius: 4px;
     text-decoration: none;
     font-size: 0.95rem;
@@ -263,7 +289,7 @@
   .btn-secondary {
     border: 1px solid var(--border);
     color: var(--text);
-    padding: 0.65rem 1.6rem;
+    padding: 0.7rem 1.6rem;
     border-radius: 4px;
     text-decoration: none;
     font-size: 0.95rem;
@@ -271,21 +297,143 @@
   }
 
   .btn-secondary:hover {
-    border-color: var(--blue);
-    color: var(--blue);
+    border-color: var(--orange);
+    color: var(--orange);
   }
 
-  .scroll-down {
-    position: absolute;
-    bottom: 2rem;
+  .metrics {
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .metric-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+  }
+
+  .metric-label {
+    font-size: 0.78rem;
     color: var(--text-muted);
-    text-decoration: none;
-    font-size: 1.2rem;
-    animation: float 2s ease-in-out infinite;
+    margin-top: 0.25rem;
   }
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(6px); }
+  /* RIGHT */
+  .photo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .photo-terminal {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg-card);
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+    background: var(--bg-card2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .dot.red    { background: #FF5F57; }
+  .dot.yellow { background: #FEBC2E; }
+  .dot.green  { background: #28C840; }
+
+  .terminal-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-left: 0.5rem;
+  }
+
+  .placeholder-photo {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0F1318 0%, #161B22 100%);
+  }
+
+  .placeholder-photo span {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--border);
+  }
+
+  .tech-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tech-tags span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--orange);
+    border: 1px solid rgba(240, 165, 0, 0.3);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-content {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .right {
+      max-width: 320px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .metrics {
+      gap: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 1.8rem; }
+
+    .ctas {
+      flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      text-align: center;
+    }
+
+    .metrics {
+      gap: 1.25rem;
+    }
+
+    .metric-value { font-size: 1.4rem; }
   }
 </style>
