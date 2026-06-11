@@ -1,0 +1,291 @@
+---
+---
+
+<section id="inicio">
+  <canvas id="code-bg"></canvas>
+
+  <div class="content">
+    <h1>David Gómez<span class="cursor">_</span></h1>
+    <p class="subtitle">BACKEND DEVELOPER · SPRING BOOT · MICROSERVICES</p>
+    <div class="ctas">
+      <a href="#proyectos" class="btn-primary">Ver proyectos</a>
+      <a href="#contacto" class="btn-secondary">Contactar</a>
+    </div>
+  </div>
+
+  <a href="#stack" class="scroll-down">↓</a>
+</section>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    const canvas = document.getElementById('code-bg');
+    const ctx = canvas.getContext('2d');
+
+    const code = [
+      'package com.pagoya.wallet.transaction;',
+      '',
+      'import org.springframework.stereotype.Service;',
+      'import org.springframework.transaction.annotation.Transactional;',
+      'import lombok.RequiredArgsConstructor;',
+      'import java.math.BigDecimal;',
+      'import java.time.LocalDateTime;',
+      '',
+      '@Service',
+      '@RequiredArgsConstructor',
+      'public class TransactionService {',
+      '',
+      '    private final WalletRepository walletRepository;',
+      '    private final TransactionRepository transactionRepository;',
+      '    private final NotificationService notificationService;',
+      '',
+      '    @Transactional',
+      '    public TransactionResponse transfer(TransferRequest request) {',
+      '        Wallet origin = walletRepository',
+      '            .findById(request.getOriginId())',
+      '            .orElseThrow(() -> new WalletNotFoundException("Origin wallet not found"));',
+      '',
+      '        Wallet destination = walletRepository',
+      '            .findById(request.getDestinationId())',
+      '            .orElseThrow(() -> new WalletNotFoundException("Destination wallet not found"));',
+      '',
+      '        if (origin.getBalance().compareTo(request.getAmount()) < 0) {',
+      '            throw new InsufficientFundsException("Insufficient balance");',
+      '        }',
+      '',
+      '        origin.setBalance(origin.getBalance().subtract(request.getAmount()));',
+      '        destination.setBalance(destination.getBalance().add(request.getAmount()));',
+      '',
+      '        Transaction tx = Transaction.builder()',
+      '            .originWallet(origin)',
+      '            .destinationWallet(destination)',
+      '            .amount(request.getAmount())',
+      '            .status(TransactionStatus.COMPLETED)',
+      '            .createdAt(LocalDateTime.now())',
+      '            .build();',
+      '',
+      '        transactionRepository.save(tx);',
+      '        walletRepository.save(origin);',
+      '        walletRepository.save(destination);',
+      '',
+      '        notificationService.notify(origin.getUser(), "Transfer sent: $" + request.getAmount());',
+      '        notificationService.notify(destination.getUser(), "Transfer received: $" + request.getAmount());',
+      '',
+      '        return TransactionResponse.from(tx);',
+      '    }',
+      '',
+      '    public Page<Transaction> getHistory(Long walletId, Pageable pageable) {',
+      '        return transactionRepository.findByWalletId(walletId, pageable);',
+      '    }',
+      '',
+      '    @Transactional',
+      '    public void revert(Long transactionId) {',
+      '        Transaction tx = transactionRepository',
+      '            .findById(transactionId)',
+      '            .orElseThrow(() -> new TransactionNotFoundException("Transaction not found"));',
+      '',
+      '        if (tx.getStatus() == TransactionStatus.REVERTED) {',
+      '            throw new IllegalStateException("Transaction already reverted");',
+      '        }',
+      '',
+      '        Wallet origin = tx.getOriginWallet();',
+      '        Wallet destination = tx.getDestinationWallet();',
+      '',
+      '        origin.setBalance(origin.getBalance().add(tx.getAmount()));',
+      '        destination.setBalance(destination.getBalance().subtract(tx.getAmount()));',
+      '',
+      '        tx.setStatus(TransactionStatus.REVERTED);',
+      '        tx.setRevertedAt(LocalDateTime.now());',
+      '',
+      '        transactionRepository.save(tx);',
+      '        walletRepository.save(origin);',
+      '        walletRepository.save(destination);',
+      '    }',
+      '}',
+      '',
+      '// ─────────────────────────────────────────────',
+      '',
+      'package com.pagoya.wallet.controller;',
+      '',
+      'import org.springframework.web.bind.annotation.*;',
+      'import org.springframework.http.ResponseEntity;',
+      'import lombok.RequiredArgsConstructor;',
+      '',
+      '@RestController',
+      '@RequestMapping("/api/v1/transactions")',
+      '@RequiredArgsConstructor',
+      'public class TransactionController {',
+      '',
+      '    private final TransactionService transactionService;',
+      '',
+      '    @PostMapping("/transfer")',
+      '    public ResponseEntity<TransactionResponse> transfer(@RequestBody TransferRequest request) {',
+      '        return ResponseEntity.ok(transactionService.transfer(request));',
+      '    }',
+      '',
+      '    @GetMapping("/history/{walletId}")',
+      '    public ResponseEntity<Page<Transaction>> getHistory(',
+      '        @PathVariable Long walletId,',
+      '        Pageable pageable) {',
+      '        return ResponseEntity.ok(transactionService.getHistory(walletId, pageable));',
+      '    }',
+      '',
+      '    @PostMapping("/revert/{id}")',
+      '    public ResponseEntity<Void> revert(@PathVariable Long id) {',
+      '        transactionService.revert(id);',
+      '        return ResponseEntity.noContent().build();',
+      '    }',
+      '}',
+    ];
+
+    const LINE_HEIGHT = 22;
+    const FONT_SIZE   = 13;
+    const SPEED       = 0.4;
+    const PADDING     = 60;
+
+    let y = 0;
+    const totalHeight = code.length * LINE_HEIGHT;
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = FONT_SIZE + 'px "JetBrains Mono", monospace';
+
+      const startLine = Math.floor(y / LINE_HEIGHT);
+      const visibleLines = Math.ceil(canvas.height / LINE_HEIGHT) + 2;
+
+      for (let i = 0; i < visibleLines; i++) {
+        const lineIndex = (startLine + i) % code.length;
+        const lineY = PADDING + (i * LINE_HEIGHT) - (y % LINE_HEIGHT);
+
+        const line = code[lineIndex];
+
+        // color segun tipo de linea
+        if (line.startsWith('//')) {
+          ctx.fillStyle = 'rgba(100, 110, 120, 0.5)';
+        } else if (line.startsWith('@')) {
+          ctx.fillStyle = 'rgba(130, 150, 170, 0.45)';
+        } else if (line.includes('public') || line.includes('private')) {
+          ctx.fillStyle = 'rgba(120, 140, 160, 0.4)';
+        } else if (line.trim() === '') {
+          ctx.fillStyle = 'rgba(0,0,0,0)';
+        } else {
+          ctx.fillStyle = 'rgba(110, 125, 140, 0.35)';
+        }
+
+        ctx.fillText(line, PADDING, lineY);
+      }
+
+      y += SPEED;
+      if (y > totalHeight) y = 0;
+
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    draw();
+    window.addEventListener('resize', resize);
+  });
+</script>
+
+
+<style>
+  section {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--bg);
+
+  }
+
+  canvas {
+    position: absolute;
+    inset: 0;
+    opacity: 1;
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 1rem;
+  }
+
+  .cursor {
+    color: var(--blue);
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  .subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(0.75rem, 2vw, 0.95rem);
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    margin-bottom: 2.5rem;
+  }
+
+  .ctas {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    background: var(--blue);
+    color: #0D1117;
+    font-weight: 600;
+    padding: 0.65rem 1.6rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: opacity 0.2s;
+  }
+
+  .btn-primary:hover { opacity: 0.85; }
+
+  .btn-secondary {
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.65rem 1.6rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  .scroll-down {
+    position: absolute;
+    bottom: 2rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 1.2rem;
+    animation: float 2s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(6px); }
+  }
+</style>

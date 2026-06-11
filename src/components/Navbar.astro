@@ -1,0 +1,79 @@
+---
+const links = [
+  { label: "Inicio",    href: "#inicio" },
+  { label: "Stack",     href: "#stack" },
+  { label: "Proyectos", href: "#proyectos" },
+  { label: "Contacto",  href: "#contacto" },
+];
+---
+
+<header>
+  <nav>
+    <span class="logo">David Gómez</span>
+
+    <ul>
+      {links.map(link => (
+        <li><a href={link.href}>{link.label}</a></li>
+      ))}
+    </ul>
+
+    <a href="/resume.pdf" class="btn-resume" target="_blank">Resume</a>
+  </nav>
+</header>
+
+<style>
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(13, 17, 23, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  nav {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text);
+  }
+
+  ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+
+  a:hover { color: var(--blue); }
+
+  .btn-resume {
+    background: var(--blue);
+    color: #0D1117;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    transition: opacity 0.2s;
+  }
+
+  .btn-resume:hover { opacity: 0.85; color: #0D1117; }
+</style>

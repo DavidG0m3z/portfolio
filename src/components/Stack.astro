@@ -1,0 +1,132 @@
+---
+const stack = [
+  {
+    category: "Backend",
+    icon: "⬡",
+    items: ["Java", "Spring Boot", "Spring Cloud", "JPA", "REST APIs"],
+  },
+  {
+    category: "Mobile",
+    icon: "◱",
+    items: ["Android", "Jetpack Compose", "Kotlin", "Retrofit", "WorkManager"],
+  },
+  {
+    category: "DevOps",
+    icon: "</>",
+    items: ["Docker", "GitHub Actions", "AWS EKS", "Linux"],
+  },
+  {
+    category: "Database",
+    icon: "◎",
+    items: ["PostgreSQL", "MariaDB"],
+  },
+  {
+    category: "Frontend",
+    icon: "▨",
+    items: ["React Native", "TypeScript", "Astro"],
+  },
+];
+---
+
+<section id="stack">
+  <div class="container">
+    <h2 class="section-title">Stack Tecnológico</h2>
+    <div class="grid">
+      {stack.map(group => (
+        <div class="card">
+          <div class="card-header">
+            <span class="icon">{group.icon}</span>
+            <h3>{group.category}</h3>
+          </div>
+          <div class="badges">
+            {group.items.map(item => (
+              <span class="badge">{item}</span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  section {
+    padding: 6rem 2rem;
+    background-color: var(--bg);
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--blue);
+  }
+
+  .section-title::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: var(--green);
+    margin-top: 0.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover {
+    border-color: var(--blue);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .icon {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--blue);
+    font-size: 1rem;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    background: rgba(88, 166, 255, 0.08);
+    color: var(--green);
+    border: 1px solid rgba(63, 185, 80, 0.25);
+    padding: 0.25rem 0.65rem;
+    border-radius: 4px;
+  }
+</style>
