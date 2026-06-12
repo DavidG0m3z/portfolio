@@ -1,11 +1,31 @@
 ---
+import { Code, Database, GitBranch, Users, GraduationCap, BookOpen } from 'lucide-astro';
+
 const facts = [
-  { icon: "⚡", text: "Construyo APIs que no se caen a las 3am" },
-  { icon: "🏗️", text: "Obsesionado con arquitecturas limpias y código mantenible" },
-  { icon: "🎓", text: "Ingeniería de Sistemas — Universidad de Antioquia" },
-  { icon: "🇨🇴", text: "Basado en Medellín, abierto a trabajo remoto" },
-  { icon: "🚀", text: "Apuntando a roles backend en fintech y banca digital" },
-  { icon: "📚", text: "Siempre aprendiendo — actualmente: System Design y AWS" },
+  {
+    icon: Code,
+    text: "Me obsesiona entender cómo los sistemas crecen, escalan y sobreviven al éxito",
+  },
+  {
+    icon: Database,
+    text: "Creo que los datos son el activo más poderoso de cualquier negocio moderno",
+  },
+  {
+    icon: GitBranch,
+    text: "Disfruto más dibujando diagramas de arquitectura que viendo Netflix",
+  },
+  {
+    icon: Users,
+    text: "Trabajo mejor en equipo — las mejores soluciones nacen del debate de ideas",
+  },
+  {
+    icon: GraduationCap,
+    text: "Ingeniería de Sistemas — Universidad de Antioquia, trabajando y estudiando en paralelo",
+  },
+  {
+    icon: BookOpen,
+    text: "Siempre aprendiendo — actualmente: System Design, AWS y algoritmos",
+  },
 ];
 ---
 
@@ -17,7 +37,8 @@ const facts = [
         <p class="eyebrow">// about me</p>
         <h2>Sobre mí</h2>
         <p class="tagline">
-          Desarrollador backend junior con mentalidad de senior.
+          Desarrollador backend con hambre de entender
+          el negocio detrás del código.
         </p>
       </div>
 
@@ -25,7 +46,9 @@ const facts = [
         <ul>
           {facts.map(fact => (
             <li>
-              <span class="icon">{fact.icon}</span>
+              <span class="icon">
+                <fact.icon size={18} />
+              </span>
               <span class="text">{fact.text}</span>
             </li>
           ))}
@@ -81,7 +104,7 @@ const facts = [
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   li {
@@ -101,13 +124,16 @@ const facts = [
   }
 
   .icon {
-    font-size: 1.2rem;
+    color: var(--blue);
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
   }
 
   .text {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     color: var(--text);
+    line-height: 1.5;
   }
 
   @media (max-width: 768px) {
@@ -120,6 +146,6 @@ const facts = [
   @media (max-width: 480px) {
     section { padding: 4rem 1.25rem; }
     h2 { font-size: 1.6rem; }
-    .text { font-size: 0.88rem; }
+    .text { font-size: 0.85rem; }
   }
 </style>
