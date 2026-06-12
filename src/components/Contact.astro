@@ -1,0 +1,208 @@
+---
+const links = [
+  {
+    icon: "✉️",
+    label: "Email",
+    value: "tu@email.com",
+    href: "mailto:tu@email.com",
+  },
+  {
+    icon: "💼",
+    label: "LinkedIn",
+    value: "linkedin.com/in/tu-usuario",
+    href: "https://linkedin.com/in/tu-usuario",
+  },
+  {
+    icon: "🐙",
+    label: "GitHub",
+    value: "github.com/tu-usuario",
+    href: "https://github.com/tu-usuario",
+  },
+];
+---
+
+<section id="contacto">
+  <div class="container">
+
+    <div class="section-header">
+      <p class="eyebrow">// contact</p>
+      <h2>Hablemos del próximo sistema</h2>
+      <p class="subtitle">
+        Abierto a oportunidades en desarrollo backend y mobile.
+        ¿Tienes un proyecto o rol en mente? Escríbeme.
+      </p>
+    </div>
+
+    <div class="links">
+      {links.map(link => (
+        <a href={link.href} target="_blank" class="link-card">
+          <span class="link-icon">{link.icon}</span>
+          <div class="link-info">
+            <span class="link-label">{link.label}</span>
+            <span class="link-value">{link.value}</span>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span class="logo">David Gómez</span>
+    <span class="copy">© 2025 · Built with Astro · Spring Boot · AWS</span>
+    <div class="footer-links">
+      <a href="https://github.com/tu-usuario" target="_blank">GitHub</a>
+      <a href="https://linkedin.com/in/tu-usuario" target="_blank">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  section {
+    padding: 6rem 2rem;
+    background-color: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--blue);
+    margin-bottom: 0.75rem;
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .link-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .link-card:hover {
+    border-color: var(--blue);
+    transform: translateX(4px);
+  }
+
+  .link-icon { font-size: 1.3rem; }
+
+  .link-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex-grow: 1;
+  }
+
+  .link-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .link-value {
+    font-size: 0.95rem;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .arrow {
+    color: var(--blue);
+    font-size: 1.1rem;
+    transition: transform 0.2s;
+  }
+
+  .link-card:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+  }
+
+  footer .container {
+    max-width: 1100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+
+  .copy {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .footer-links a {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--blue); }
+
+  /* RESPONSIVE */
+  @media (max-width: 480px) {
+    section { padding: 4rem 1.25rem; }
+
+    footer .container {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>

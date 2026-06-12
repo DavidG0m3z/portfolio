@@ -1,8 +1,4 @@
 ---
-interface Props {
-  title?: string;
-}
-const { title = "David Gómez · Backend Developer" } = Astro.props;
 ---
 
 <section id="inicio">
@@ -183,7 +179,7 @@ const { title = "David Gómez · Backend Developer" } = Astro.props;
         if (line.startsWith('//')) {
           ctx.fillStyle = 'rgba(100, 110, 120, 0.5)';
         } else if (line.startsWith('@')) {
-          ctx.fillStyle = 'rgba(240, 165, 0, 0.2)';
+          ctx.fillStyle = 'rgba(88, 166, 255, 0.2)';
         } else if (line.includes('public') || line.includes('private')) {
           ctx.fillStyle = 'rgba(120, 140, 160, 0.35)';
         } else if (line.trim() === '') {
@@ -239,11 +235,10 @@ const { title = "David Gómez · Backend Developer" } = Astro.props;
     align-items: center;
   }
 
-  /* LEFT */
   .eyebrow {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.8rem;
-    color: var(--orange);
+    color: var(--blue);
     letter-spacing: 1px;
     margin-bottom: 1.25rem;
   }
@@ -256,7 +251,7 @@ const { title = "David Gómez · Backend Developer" } = Astro.props;
     color: var(--text);
   }
 
-  .accent { color: var(--green); }
+  .accent { color: var(--blue); }
 
   .description {
     font-size: 1rem;
@@ -297,8 +292,8 @@ const { title = "David Gómez · Backend Developer" } = Astro.props;
   }
 
   .btn-secondary:hover {
-    border-color: var(--orange);
-    color: var(--orange);
+    border-color: var(--blue);
+    color: var(--blue);
   }
 
   .metrics {
@@ -316,7 +311,7 @@ const { title = "David Gómez · Backend Developer" } = Astro.props;
     font-family: 'Space Grotesk', sans-serif;
     font-size: 1.8rem;
     font-weight: 700;
-    color: var(--orange);
+    color: var(--blue);
     line-height: 1;
   }
 
@@ -326,7 +321,6 @@ const { title = "David Gómez · Backend Developer" } = Astro.props;
     margin-top: 0.25rem;
   }
 
-  /* RIGHT */
   .photo-wrapper {
     display: flex;
     flex-direction: column;
@@ -394,13 +388,12 @@ const { title = "David Gómez · Backend Developer" } = Astro.props;
   .tech-tags span {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.72rem;
-    color: var(--orange);
-    border: 1px solid rgba(240, 165, 0, 0.3);
+    color: var(--blue);
+    border: 1px solid rgba(88, 166, 255, 0.3);
     padding: 0.2rem 0.6rem;
     border-radius: 4px;
   }
 
-  /* RESPONSIVE */
   @media (max-width: 768px) {
     .hero-content {
       grid-template-columns: 1fr;
@@ -413,26 +406,18 @@ const { title = "David Gómez · Backend Developer" } = Astro.props;
       width: 100%;
     }
 
-    .metrics {
-      gap: 1.5rem;
-    }
+    .metrics { gap: 1.5rem; }
   }
 
   @media (max-width: 480px) {
     h1 { font-size: 1.8rem; }
 
-    .ctas {
-      flex-direction: column;
-    }
+    .ctas { flex-direction: column; }
 
     .btn-primary,
-    .btn-secondary {
-      text-align: center;
-    }
+    .btn-secondary { text-align: center; }
 
-    .metrics {
-      gap: 1.25rem;
-    }
+    .metrics { gap: 1.25rem; }
 
     .metric-value { font-size: 1.4rem; }
   }

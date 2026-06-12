@@ -1,0 +1,255 @@
+---
+const certifications = [
+  {
+    name: "AWS Serverless",
+    issuer: "Amazon Web Services",
+    icon: "☁️",
+    status: "obtained",
+    color: "#FF9900",
+  },
+  {
+    name: "Linux Administration",
+    issuer: "Red Hat",
+    icon: "🎩",
+    status: "obtained",
+    color: "#EE0000",
+  },
+];
+
+const learning = [
+  { name: "AWS Solutions Architect", platform: "AWS", progress: 40 },
+  { name: "Spring Professional", platform: "VMware", progress: 25 },
+  { name: "System Design Interview", platform: "ByteByteGo", progress: 60 },
+];
+---
+
+<section id="certificaciones">
+  <div class="container">
+
+    <div class="section-header">
+      <p class="eyebrow">// certifications</p>
+      <h2>Certificaciones</h2>
+    </div>
+
+    <div class="certs-grid">
+      {certifications.map(cert => (
+        <div class="cert-card">
+          <div class="cert-icon" style={`border-color: ${cert.color}30; background: ${cert.color}10`}>
+            <span>{cert.icon}</span>
+          </div>
+          <div class="cert-info">
+            <h3>{cert.name}</h3>
+            <p>{cert.issuer}</p>
+            <span class="badge-obtained">Obtenida</span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="learning-header">
+      <p class="eyebrow">// continuous learning</p>
+      <h2>Aprendizaje Continuo</h2>
+    </div>
+
+    <div class="learning-grid">
+      {learning.map(item => (
+        <div class="learning-card">
+          <div class="learning-top">
+            <h3>{item.name}</h3>
+            <span class="platform">{item.platform}</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style={`width: ${item.progress}%`}></div>
+          </div>
+          <span class="progress-label">{item.progress}% completado</span>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  section {
+    padding: 6rem 2rem;
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border);
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-header,
+  .learning-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .learning-header {
+    margin-top: 4rem;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--blue);
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  h2::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: var(--blue);
+    margin-top: 0.5rem;
+  }
+
+  /* CERTS */
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .cert-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .cert-card:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+  }
+
+  .cert-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    border: 1px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  .cert-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .cert-info h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .cert-info p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .badge-obtained {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    background: rgba(63, 185, 80, 0.1);
+    color: var(--green);
+    border: 1px solid rgba(63, 185, 80, 0.3);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    width: fit-content;
+    margin-top: 0.25rem;
+  }
+
+  /* LEARNING */
+  .learning-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .learning-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: border-color 0.2s;
+  }
+
+  .learning-card:hover { border-color: var(--blue); }
+
+  .learning-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .learning-top h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .platform {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--blue);
+    border: 1px solid rgba(88, 166, 255, 0.3);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+
+  .progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .certs-grid,
+    .learning-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    section { padding: 4rem 1.25rem; }
+    h2 { font-size: 1.6rem; }
+  }
+</style>
