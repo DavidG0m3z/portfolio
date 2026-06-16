@@ -1,65 +1,104 @@
 ---
+import { 
+  Code2, Server, Smartphone, Cloud, Database, 
+  Layout, TestTube, BarChart2, Cpu, Shield,
+  GitBranch, Monitor, Layers
+} from 'lucide-astro';
+
+const languages = ["Java", "TypeScript", "JavaScript", "C#", "Kotlin", "Python", "SQL"];
+
 const groups = [
   {
-    category: "Java Backend",
-    icon: "☕",
+    category: "Backend",
+    icon: Server,
     items: [
-      { name: "Java", level: 4 },
       { name: "Spring Boot", level: 4 },
-      { name: "Spring Cloud", level: 3 },
-      { name: "JPA / Hibernate", level: 3 },
-      { name: "JUnit / Testing", level: 3 },
-    ],
-  },
-  {
-    category: "Cloud & DevOps",
-    icon: "☁️",
-    items: [
-      { name: "Docker", level: 4 },
-      { name: "GitHub Actions", level: 3 },
-      { name: "AWS EKS", level: 2 },
-      { name: "Linux", level: 4 },
-      { name: "LocalStack", level: 2 },
-    ],
-  },
-  {
-    category: "Data Systems",
-    icon: "🗄️",
-    items: [
-      { name: "PostgreSQL", level: 4 },
-      { name: "MariaDB", level: 3 },
-      { name: "TypeORM", level: 3 },
-      { name: "Redis", level: 2 },
+      { name: "NestJS", level: 4 },
+      { name: "Express", level: 4 },
+      { name: ".NET", level: 3 },
     ],
   },
   {
     category: "Mobile",
-    icon: "📱",
+    icon: Smartphone,
     items: [
-      { name: "Android", level: 3 },
-      { name: "Jetpack Compose", level: 3 },
-      { name: "Kotlin", level: 3 },
-      { name: "Retrofit", level: 3 },
-      { name: "WorkManager", level: 2 },
+      { name: "React Native", level: 4 },
+      { name: "Kotlin (Jetpack Compose)", level: 2 },
+      { name: "Android", level: 1 },
     ],
   },
   {
     category: "Frontend",
-    icon: "🖥️",
+    icon: Layout,
     items: [
-      { name: "React Native", level: 3 },
-      { name: "TypeScript", level: 3 },
+      { name: "React", level: 3 },
       { name: "Astro", level: 2 },
-      { name: "NestJS", level: 3 },
+    ],
+  },
+  {
+    category: "Cloud & DevOps",
+    icon: Cloud,
+    items: [
+      { name: "Docker", level: 3 },
+      { name: "Kubernetes", level: 2 },
+      { name: "GitHub Actions", level: 4 },
+      { name: "AWS", level: 3 },
+      { name: "Azure", level: 2 },
+      { name: "Linux", level: 4 },
+    ],
+  },
+  {
+    category: "Bases de Datos",
+    icon: Database,
+    items: [
+      { name: "PostgreSQL", level: 4 },
+      { name: "MariaDB / MySQL", level: 4 },
+      { name: "MongoDB", level: 3 },
+      { name: "Redis", level: 2 },
+      { name: "JPA / Hibernate", level: 4 },
+      { name: "TypeORM", level: 4 },
+    ],
+  },
+  {
+    category: "Testing",
+    icon: TestTube,
+    items: [
+      { name: "JUnit", level: 4 },
+      { name: "Mockito", level: 4 },
+      { name: "Jest", level: 4 },
+      { name: "Vitest", level: 4 },
+      { name: "SonarQube", level: 3 },
+      { name: "Postman", level: 4 },
+    ],
+  },
+  {
+    category: "Data",
+    icon: BarChart2,
+    items: [
+      { name: "Pandas", level: 3 },
+      { name: "Matplotlib", level: 2 },
+      { name: "Seaborn", level: 2 },
+      { name: "Scikit-learn", level: 2 },
+    ],
+  },
+  {
+    category: "IA",
+    icon: BarChart2,
+    items: [
+      { name: "Claude Code", level: 3 },
+      { name: "GitHub Copilot", level: 2 },
+      { name: "Open Code", level: 2 },
     ],
   },
 ];
 
 const specialties = [
-  { icon: "⚡", label: "REST APIs" },
-  { icon: "🔗", label: "Microservicios" },
-  { icon: "🔐", label: "Seguridad JWT" },
-  { icon: "📦", label: "Monolitos Modulares" },
+  { icon: Code2,     label: "REST APIs",         desc: "Diseño, versionado y documentación con Swagger" },
+  { icon: Monitor,   label: "Cliente-Servidor",   desc: "HTTP, stateless, separación de responsabilidades" },
+  { icon: Layers,    label: "Microservicios",     desc: "Spring Cloud, Gateway, Eureka, comunicación entre servicios" },
+  { icon: Shield,    label: "Seguridad",          desc: "JWT, AWS IAM, autenticación y autorización" },
+  { icon: Database,  label: "Diseño de BD",       desc: "Relacional, NoSQL, índices, maestro/esclavo" },
+  { icon: Smartphone,label: "Apps Móviles",       desc: "React Native, Android nativo con Jetpack Compose" },
 ];
 ---
 
@@ -71,11 +110,19 @@ const specialties = [
       <h2>Ecosistema Tecnológico</h2>
     </div>
 
+    <!-- LENGUAJES -->
+    <div class="languages">
+      {languages.map(lang => (
+        <span class="lang-badge">{lang}</span>
+      ))}
+    </div>
+
+    <!-- GRUPOS -->
     <div class="grid">
       {groups.map(group => (
         <div class="card">
           <div class="card-header">
-            <span class="icon">{group.icon}</span>
+            <span class="icon"><group.icon size={16} /></span>
             <h3>{group.category}</h3>
           </div>
           <ul>
@@ -94,11 +141,20 @@ const specialties = [
       ))}
     </div>
 
+    <!-- ESPECIALIDADES -->
+    <div class="specialties-header">
+      <p class="eyebrow">// specialties</p>
+      <h2>Especialidades</h2>
+    </div>
+
     <div class="specialties">
       {specialties.map(s => (
         <div class="specialty">
-          <span class="s-icon">{s.icon}</span>
-          <span class="s-label">{s.label}</span>
+          <span class="s-icon"><s.icon size={20} /></span>
+          <div class="s-info">
+            <span class="s-label">{s.label}</span>
+            <span class="s-desc">{s.desc}</span>
+          </div>
         </div>
       ))}
     </div>
@@ -118,8 +174,13 @@ const specialties = [
     margin: 0 auto;
   }
 
-  .section-header {
-    margin-bottom: 3rem;
+  .section-header,
+  .specialties-header {
+    margin-bottom: 2rem;
+  }
+
+  .specialties-header {
+    margin-top: 4rem;
   }
 
   .eyebrow {
@@ -144,11 +205,36 @@ const specialties = [
     margin-top: 0.5rem;
   }
 
+  /* LENGUAJES */
+  .languages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 3rem;
+  }
+
+  .lang-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.85rem;
+    border-radius: 4px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .lang-badge:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  /* GRID */
   .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1rem;
   }
 
   .card {
@@ -168,7 +254,11 @@ const specialties = [
     margin-bottom: 1.25rem;
   }
 
-  .icon { font-size: 1.1rem; }
+  .icon {
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+  }
 
   h3 {
     font-size: 0.95rem;
@@ -208,19 +298,18 @@ const specialties = [
 
   .dot.active { background: var(--blue); }
 
-  /* SPECIALTIES */
+  /* ESPECIALIDADES */
   .specialties {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    margin-top: 1rem;
   }
 
   .specialty {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -229,20 +318,35 @@ const specialties = [
 
   .specialty:hover { border-color: var(--blue); }
 
-  .s-icon { font-size: 1.3rem; }
+  .s-icon {
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .s-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
 
   .s-label {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
     color: var(--text);
   }
 
+  .s-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
   /* RESPONSIVE */
   @media (max-width: 900px) {
-    .grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
+    .grid,
     .specialties {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -250,15 +354,11 @@ const specialties = [
 
   @media (max-width: 480px) {
     section { padding: 4rem 1.25rem; }
+    h2 { font-size: 1.6rem; }
 
-    .grid {
+    .grid,
+    .specialties {
       grid-template-columns: 1fr;
     }
-
-    .specialties {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    h2 { font-size: 1.6rem; }
   }
-</style>
+</style>  
