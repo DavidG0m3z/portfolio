@@ -1,25 +1,24 @@
 ---
+import { Award, BookOpen, Eye, CheckCircle, Clock } from 'lucide-astro';
+
 const certifications = [
   {
-    name: "AWS Serverless",
-    issuer: "Amazon Web Services",
-    icon: "☁️",
+    name: "Red Hat System Administration I (RH124) (RH124-8.2)",
+    issuer: "Red Hat",
     status: "obtained",
-    color: "#FF9900",
+    pdf: "/certifications/redhat-linux.pdf",
   },
   {
-    name: "Linux Administration",
-    issuer: "Red Hat",
-    icon: "🎩",
-    status: "obtained",
-    color: "#EE0000",
+    name: "AWS Certified Solutions Architect – Associate (SAA-C03)",
+    issuer: "Amazon Web Services",
+    status: "wip",
+    pdf: null,
   },
 ];
 
 const learning = [
-  { name: "AWS Solutions Architect", platform: "AWS", progress: 40 },
-  { name: "Spring Professional", platform: "VMware", progress: 25 },
-  { name: "System Design Interview", platform: "ByteByteGo", progress: 60 },
+  { name: "Spring Professional", platform: "VMware" },
+  { name: "System Design", platform: "ByteByteGo" },
 ];
 ---
 
@@ -33,15 +32,37 @@ const learning = [
 
     <div class="certs-grid">
       {certifications.map(cert => (
-        <div class="cert-card">
-          <div class="cert-icon" style={`border-color: ${cert.color}30; background: ${cert.color}10`}>
-            <span>{cert.icon}</span>
+        <div class={`cert-card ${cert.status === 'wip' ? 'wip' : ''}`}>
+          <div class="cert-left">
+            <div class="cert-icon">
+              <Award size={20} />
+            </div>
+            <div class="cert-info">
+              <h3>{cert.name}</h3>
+              <p>{cert.issuer}</p>
+              {cert.status === 'obtained' ? (
+                <span class="badge-obtained">
+                  <CheckCircle size={11} />
+                  Obtenida
+                </span>
+              ) : (
+                <span class="badge-wip">
+                  <Clock size={11} />
+                  En progreso
+                </span>
+              )}
+            </div>
           </div>
-          <div class="cert-info">
-            <h3>{cert.name}</h3>
-            <p>{cert.issuer}</p>
-            <span class="badge-obtained">Obtenida</span>
-          </div>
+          {cert.status === 'obtained' && (
+            <button
+              class="btn-eye"
+              data-pdf={cert.pdf}
+              data-name={cert.name}
+              aria-label="Ver certificado"
+            >
+              <Eye size={16} />
+            </button>
+          )}
         </div>
       ))}
     </div>
@@ -54,20 +75,81 @@ const learning = [
     <div class="learning-grid">
       {learning.map(item => (
         <div class="learning-card">
-          <div class="learning-top">
+          <div class="learning-left">
+            <BookOpen size={16} />
             <h3>{item.name}</h3>
-            <span class="platform">{item.platform}</span>
           </div>
-          <div class="progress-bar">
-            <div class="progress-fill" style={`width: ${item.progress}%`}></div>
-          </div>
-          <span class="progress-label">{item.progress}% completado</span>
+          <span class="badge-wip">
+            <Clock size={11} />
+            En curso
+          </span>
         </div>
       ))}
     </div>
 
   </div>
 </section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="cert-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="cert-modal-title">Certificado</span>
+      <div class="modal-actions">
+        <a href="#" download class="modal-download" id="cert-modal-download">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 4h14v-2H5v2z"/>
+          </svg>
+          Descargar
+        </a>
+        <button class="modal-close" id="close-cert" aria-label="Cerrar">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <iframe id="cert-modal-iframe" src="" title="Certificado"></iframe>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    const modal    = document.getElementById('cert-modal');
+    const iframe   = document.getElementById('cert-modal-iframe');
+    const title    = document.getElementById('cert-modal-title');
+    const download = document.getElementById('cert-modal-download');
+    const closeBtn = document.getElementById('close-cert');
+    const btns     = document.querySelectorAll('.btn-eye');
+
+    function openModal(pdf, name) {
+      iframe.src = pdf;
+      title.textContent = name;
+      download.href = pdf;
+      download.setAttribute('download', name + '.pdf');
+      modal.classList.add('open');
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      iframe.src = '';
+    }
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', function () {
+        openModal(this.dataset.pdf, this.dataset.name);
+      });
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  });
+</script>
 
 <style>
   section {
@@ -86,9 +168,7 @@ const learning = [
     margin-bottom: 2.5rem;
   }
 
-  .learning-header {
-    margin-top: 4rem;
-  }
+  .learning-header { margin-top: 4rem; }
 
   .eyebrow {
     font-family: 'JetBrains Mono', monospace;
@@ -115,18 +195,19 @@ const learning = [
   /* CERTS */
   .certs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.25rem;
   }
 
   .cert-card {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    justify-content: space-between;
+    gap: 1rem;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 1.5rem;
+    padding: 1.25rem 1.5rem;
     transition: border-color 0.2s, transform 0.2s;
   }
 
@@ -135,22 +216,23 @@ const learning = [
     transform: translateY(-2px);
   }
 
-  .cert-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 8px;
-    border: 1px solid;
+  .cert-card.wip { opacity: 0.6; }
+
+  .cert-left {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 1.6rem;
+    gap: 1rem;
+  }
+
+  .cert-icon {
+    color: var(--blue);
     flex-shrink: 0;
   }
 
   .cert-info {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.3rem;
   }
 
   .cert-info h3 {
@@ -160,84 +242,190 @@ const learning = [
   }
 
   .cert-info p {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--text-muted);
   }
 
   .badge-obtained {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     background: rgba(63, 185, 80, 0.1);
     color: var(--green);
     border: 1px solid rgba(63, 185, 80, 0.3);
     padding: 0.15rem 0.5rem;
     border-radius: 4px;
     width: fit-content;
-    margin-top: 0.25rem;
+  }
+
+  .badge-wip {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    background: rgba(240, 165, 0, 0.1);
+    color: var(--orange);
+    border: 1px solid rgba(240, 165, 0, 0.3);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    width: fit-content;
+  }
+
+  .btn-eye {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-eye:hover {
+    border-color: var(--blue);
+    color: var(--blue);
   }
 
   /* LEARNING */
   .learning-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
   }
 
   .learning-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    padding: 1.1rem 1.5rem;
     transition: border-color 0.2s;
   }
 
   .learning-card:hover { border-color: var(--blue); }
 
-  .learning-top {
+  .learning-left {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--blue);
   }
 
-  .learning-top h3 {
-    font-size: 0.95rem;
-    font-weight: 600;
+  .learning-left h3 {
+    font-size: 0.9rem;
+    font-weight: 500;
     color: var(--text);
   }
 
-  .platform {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--blue);
-    border: 1px solid rgba(88, 166, 255, 0.3);
-    padding: 0.15rem 0.5rem;
-    border-radius: 4px;
-    white-space: nowrap;
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    backdrop-filter: blur(4px);
   }
 
-  .progress-bar {
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
     width: 100%;
-    height: 4px;
-    background: var(--border);
-    border-radius: 2px;
+    max-width: 860px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
   }
 
-  .progress-fill {
-    height: 100%;
-    background: var(--blue);
-    border-radius: 2px;
-    transition: width 0.6s ease;
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card2);
+    flex-shrink: 0;
   }
 
-  .progress-label {
+  .modal-title {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     color: var(--text-muted);
+  }
+
+  .modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .modal-download {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--blue);
+    color: #080B0F;
+    font-weight: 600;
+    font-size: 0.78rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-download:hover {
+    opacity: 0.85;
+    color: #080B0F;
+  }
+
+  .modal-close {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .modal-close:hover {
+    border-color: var(--blue);
+    color: var(--text);
+  }
+
+  .modal-body {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .modal-body iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 70vh;
+    border: none;
   }
 
   /* RESPONSIVE */
@@ -246,10 +434,14 @@ const learning = [
     .learning-grid {
       grid-template-columns: 1fr;
     }
+
+    .modal { max-height: 95vh; }
+    .modal-body iframe { min-height: 75vh; }
   }
 
   @media (max-width: 480px) {
     section { padding: 4rem 1.25rem; }
     h2 { font-size: 1.6rem; }
+    .modal-overlay { padding: 0.75rem; }
   }
 </style>

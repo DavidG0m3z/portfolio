@@ -2,7 +2,7 @@
 import { 
   Code2, Server, Smartphone, Cloud, Database, 
   Layout, TestTube, BarChart2, Cpu, Shield,
-  GitBranch, Monitor, Layers
+  GitBranch, Monitor, Layers, Workflow
 } from 'lucide-astro';
 
 const languages = ["Java", "TypeScript", "JavaScript", "C#", "Kotlin", "Python", "SQL"];
@@ -24,7 +24,6 @@ const groups = [
     items: [
       { name: "React Native", level: 4 },
       { name: "Kotlin (Jetpack Compose)", level: 2 },
-      { name: "Android", level: 1 },
     ],
   },
   {
@@ -96,9 +95,13 @@ const specialties = [
   { icon: Code2,     label: "REST APIs",         desc: "Diseño, versionado y documentación con Swagger" },
   { icon: Monitor,   label: "Cliente-Servidor",   desc: "HTTP, stateless, separación de responsabilidades" },
   { icon: Layers,    label: "Microservicios",     desc: "Spring Cloud, Gateway, Eureka, comunicación entre servicios" },
-  { icon: Shield,    label: "Seguridad",          desc: "JWT, AWS IAM, autenticación y autorización" },
+  { icon: Shield,    label: "Seguridad",          desc: "JWT, AWS IAM, autenticación y autorización, Top 10 OWASP" },
   { icon: Database,  label: "Diseño de BD",       desc: "Relacional, NoSQL, índices, maestro/esclavo" },
   { icon: Smartphone,label: "Apps Móviles",       desc: "React Native, Android nativo con Jetpack Compose" },
+  { icon: GitBranch,  label: "System Design",       desc: "Diseño de sistemas escalables, diagramas de arquitectura y componentes" },
+  { icon: Cpu,        label: "Linux",               desc: "Administración, scripting y entornos de servidor" },
+  { icon: Workflow, label: "CI/CD", desc: "GitHub Actions, pipelines automatizados y despliegue continuo" },
+
 ];
 ---
 
@@ -129,11 +132,6 @@ const specialties = [
             {group.items.map(item => (
               <li>
                 <span class="name">{item.name}</span>
-                <span class="dots">
-                  {[1,2,3,4,5].map(i => (
-                    <span class={`dot ${i <= item.level ? 'active' : ''}`}></span>
-                  ))}
-                </span>
               </li>
             ))}
           </ul>
@@ -269,11 +267,9 @@ const specialties = [
   ul { list-style: none; }
 
   li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 0.45rem 0;
     border-bottom: 1px solid var(--border);
+
   }
 
   li:last-child { border-bottom: none; }

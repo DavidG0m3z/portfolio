@@ -1,7 +1,14 @@
 ---
+import {
+  mail,
+  Linkedin,
+  Github,
+  ArrowRight
+} from "lucide-astro";
+
 const links = [
   {
-    icon: "✉️",
+    icon: mail,
     label: "Email",
     value: "david.ardilagomez@gmail.com",
     href: "mailto:david.ardilagomez@gmail.com",
@@ -26,9 +33,9 @@ const links = [
 
     <div class="section-header">
       <p class="eyebrow">// contact</p>
-      <h2>Hablemos del próximo sistema</h2>
+      <h2>Hablemos del próximo desafío</h2>
       <p class="subtitle">
-        Abierto a oportunidades en desarrollo backend y mobile.
+        Abierto a oportunidades en desarrollo de software.
         ¿Tienes un proyecto o rol en mente? Escríbeme.
       </p>
     </div>
@@ -52,11 +59,7 @@ const links = [
 <footer>
   <div class="container">
     <span class="logo">David Gómez</span>
-    <span class="copy">© 2025 · Built with Astro · Spring Boot · AWS</span>
-    <div class="footer-links">
-      <a href="https://github.com/DavidG0m3z" target="_blank">GitHub</a>
-      <a href="https://linkedin.com/in/d4vidg0mez" target="_blank">LinkedIn</a>
-    </div>
+    <span class="copy">© 2025 · Built with Astro · </span>
   </div>
 </footer>
 

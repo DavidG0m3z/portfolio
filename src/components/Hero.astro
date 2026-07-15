@@ -49,10 +49,10 @@
               <span class="dot red"></span>
               <span class="dot yellow"></span>
               <span class="dot green"></span>
-              <span class="terminal-title">david@portfolio:~</span>
+              <span class="terminal-title">deividDev</span>
             </div>
-            <div class="placeholder-photo">
-              <span>DG</span>
+            <div class="photo-container">
+              <img src="public/foto-portfolio.jpg"/>
             </div>
           </div>
           <div class="tech-tags">
@@ -360,6 +360,19 @@
     font-size: 0.7rem;
     color: var(--text-muted);
     margin-left: 0.5rem;
+  }
+
+  .photo-container {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+  }
+
+  .photo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
   }
 
   .placeholder-photo {
