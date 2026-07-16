@@ -1,6 +1,6 @@
 ---
 import {
-  mail,
+  Mail,
   Linkedin,
   Github,
   ArrowRight
@@ -8,19 +8,19 @@ import {
 
 const links = [
   {
-    icon: mail,
+    icon: Mail,
     label: "Email",
     value: "david.ardilagomez@gmail.com",
     href: "mailto:david.ardilagomez@gmail.com",
   },
   {
-    icon: "💼",
+    icon: Linkedin,
     label: "LinkedIn",
     value: "linkedin.com/in/d4vidg0mez",
     href: "https://linkedin.com/in/d4vidg0mez",
   },
   {
-    icon: "🐙",
+    icon: Github,
     label: "GitHub",
     value: "github.com/DavidG0m3z",
     href: "https://github.com/DavidG0m3z",
@@ -43,7 +43,7 @@ const links = [
     <div class="links">
       {links.map(link => (
         <a href={link.href} target="_blank" class="link-card">
-          <span class="link-icon">{link.icon}</span>
+          <span class="link-icon"><link.icon size={20} /></span>
           <div class="link-info">
             <span class="link-label">{link.label}</span>
             <span class="link-value">{link.value}</span>
@@ -58,7 +58,7 @@ const links = [
 
 <footer>
   <div class="container">
-    <span class="logo">David Gómez</span>
+    <span class="logo">David Gómez_</span>
     <span class="copy">© 2025 · Built with Astro · </span>
   </div>
 </footer>
@@ -125,7 +125,10 @@ const links = [
     transform: translateX(4px);
   }
 
-  .link-icon { font-size: 1.3rem; }
+  .link-icon { 
+    font-size: 1.3rem; 
+    color: var(--blue)  
+  }
 
   .link-info {
     display: flex;
