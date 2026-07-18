@@ -24,6 +24,7 @@
         <div class="ctas">
           <a href="#proyectos" class="btn-primary">Ver proyectos</a>
           <a href="#contacto" class="btn-secondary">Contactar</a>
+          <button class="btn-cv" id="open-cv-hero">Ver CV</button>
         </div>
 
         <div class="metrics">
@@ -65,6 +66,19 @@
 
     </div>
   </div>
+
+  <script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('open-cv-hero');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        document.getElementById('cv-modal').classList.add('open');
+      });
+    }
+  });
+</script>
+
+
 </section>
 
 <script is:inline>
@@ -450,4 +464,23 @@
 
     .metric-value { font-size: 1.4rem; }
   }
+
+  .btn-cv {
+  background: none;
+  border: 1px solid var(--green);
+  color: var(--green);
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.7rem 1.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.btn-cv:hover {
+  background: var(--green);
+  color: #080B0F;
+}
 </style>
