@@ -1,100 +1,71 @@
 ---
-const projects = [
+import type { Translations } from '../i18n/es';
+
+interface Props {
+  t: Translations;
+}
+
+const { t } = Astro.props;
+
+const projectsMeta = [
   {
-    id: 1,
-    name: "Recursos Educativos API",
-    description: "API REST para gestión de recursos educativos en la plataforma virtual de la Universidad de Antioquia. Proyecto real con metodología Scrum y entregas en producción.",
     tags: ["NestJS", "TypeScript", "MariaDB", "TypeORM", "Scrum"],
     category: "backend",
-    github: "https://github.com/DavidG0m3z/recursos-educativos-api-udea.git",
-    metrics: [
-      { label: "Entorno", value: "Producción" },
-      { label: "Metodología", value: "Scrum" },
-    ],
+    github: "https://github.com/DavidG0m3z/recursos-educativos-api",
     featured: true,
     status: "production",
   },
   {
-    id: 2,
-    name: "YouTube Manager API",
-    description: "API que consume la API de YouTube para traer y servir videos de canales universitarios. Desarrollada para la plataforma virtual Ude@ de la Universidad de Antioquia.",
     tags: ["NestJS", "TypeScript", "MariaDB", "YouTube API"],
     category: "backend",
-    github: "https://github.com/DavidG0m3z/youtube-manager-api.git",
-    metrics: [
-      { label: "Entorno", value: "Producción" },
-      { label: "Cliente", value: "Ude@" },
-    ],
+    github: "https://github.com/DavidG0m3z/youtube-manager-api",
     featured: true,
     status: "production",
   },
   {
-    id: 3,
-    name: "Bebio App",
-    description: "App móvil de seguimiento de crecimiento de bebés. Proyecto personal con visión comercial, orientado a publicación en tiendas de aplicaciones.",
     tags: ["React Native", "Firebase", "TypeScript"],
     category: "mobile",
-    github: "https://github.com/DavidG0m3z/bebio-app.git",
-    metrics: [
-      { label: "Plataforma", value: "iOS / Android" },
-      { label: "Backend", value: "Firebase" },
-    ],
+    github: "https://github.com/DavidG0m3z/bebio-app",
     featured: true,
     status: "production",
   },
   {
-    id: 4,
-    name: "Task Manager API",
-    description: "API de gestión de tareas desarrollada en .NET con arquitectura limpia por capas, similar a la arquitectura hexagonal.",
     tags: [".NET", "C#", "Clean Architecture", "REST"],
     category: "backend",
-    github: "https://github.com/DavidG0m3z/task-manager-api.git",
-    metrics: [
-      { label: "Arquitectura", value: "Clean" },
-      { label: "Lenguaje", value: ".NET / C#" },
-    ],
+    github: "https://github.com/DavidG0m3z/task-manager-api",
     featured: false,
     status: "production",
   },
   {
-    id: 5,
-    name: "PagosYa — Backend",
-    description: "Plataforma de pagos virtuales con arquitectura de microservicios. Auth, wallet, transacciones y notificaciones con Spring Cloud Gateway y Eureka.",
     tags: ["Spring Boot", "Spring Cloud", "PostgreSQL", "Docker", "AWS EKS"],
     category: "backend",
-    github: "https://github.com/tu-usuario/pagosya-backend",
-    metrics: [
-      { label: "Arquitectura", value: "Microservicios" },
-      { label: "Deploy", value: "AWS EKS" },
-    ],
+    github: "https://github.com/DavidG0m3z/pagosya-backend",
     featured: false,
     status: "wip",
   },
   {
-    id: 6,
-    name: "PagosYa — Mobile",
-    description: "Frontend móvil de la plataforma PagosYa. Wallet virtual con historial de transacciones y transferencias en tiempo real.",
     tags: ["React Native", "TypeScript", "Spring Boot"],
     category: "mobile",
-    github: "https://github.com/tu-usuario/pagosya-mobile",
-    metrics: [
-      { label: "Plataforma", value: "iOS / Android" },
-      { label: "Estado", value: "En progreso" },
-    ],
+    github: "https://github.com/DavidG0m3z/pagosya-mobile",
     featured: false,
     status: "wip",
   },
 ];
 
-const tabs = ["Todos", "Backend", "Mobile"];
+const projects = t.projects.projects.map((p, i) => ({
+  ...p,
+  ...projectsMeta[i],
+}));
+
+const tabs = t.projects.tabs;
 ---
 
 <section id="proyectos">
   <div class="container">
 
     <div class="section-header">
-      <p class="eyebrow">// projects</p>
-      <h2>Proyectos Destacados</h2>
+      <p class="eyebrow">{t.projects.eyebrow}</p>
+      <h2>{t.projects.title}</h2>
     </div>
 
     <div class="tabs">
@@ -115,10 +86,10 @@ const tabs = ["Todos", "Backend", "Mobile"];
           <div class="card-top">
             <div class="card-meta">
               {project.status === 'wip' && (
-                <span class="badge-wip">En progreso</span>
+                <span class="badge-wip">{t.projects.wipBadge}</span>
               )}
               {project.status === 'production' && (
-                <span class="badge-prod">Producción</span>
+                <span class="badge-prod">{t.projects.prodBadge}</span>
               )}
             </div>
             <a href={project.github} target="_blank" class="github-link" aria-label="GitHub">
@@ -160,10 +131,7 @@ const tabs = ["Todos", "Backend", "Mobile"];
     function filterProjects(tab) {
       cards.forEach(card => {
         const category = card.getAttribute('data-category');
-        const featured = card.getAttribute('data-featured') === 'true';
-
-        if (tab === 'todos') {
-          // En "Todos" mostramos featured primero, luego el resto
+        if (tab === 'todos' || tab === 'all') {
           card.style.display = 'flex';
         } else {
           card.style.display = category === tab ? 'flex' : 'none';
@@ -175,7 +143,7 @@ const tabs = ["Todos", "Backend", "Mobile"];
       tab.addEventListener('click', function () {
         tabs.forEach(t => t.classList.remove('active'));
         this.classList.add('active');
-        filterProjects(this.getAttribute('data-tab'));
+        filterProjects(this.getAttribute('data-tab').toLowerCase());
       });
     });
   });
@@ -217,13 +185,11 @@ const tabs = ["Todos", "Backend", "Mobile"];
     margin-top: 0.5rem;
   }
 
-  /* TABS */
   .tabs {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 2.5rem;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 0;
   }
 
   .tab {
@@ -246,14 +212,12 @@ const tabs = ["Todos", "Backend", "Mobile"];
     border-bottom-color: var(--blue);
   }
 
-  /* GRID */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.25rem;
   }
 
-  /* CARD */
   .card {
     display: flex;
     flex-direction: column;
@@ -270,9 +234,7 @@ const tabs = ["Todos", "Backend", "Mobile"];
     transform: translateY(-2px);
   }
 
-  .card.featured {
-    border-color: rgba(88, 166, 255, 0.3);
-  }
+  .card.featured { border-color: rgba(88, 166, 255, 0.3); }
 
   .card-top {
     display: flex;
@@ -328,11 +290,7 @@ const tabs = ["Todos", "Backend", "Mobile"];
     border-bottom: 1px solid var(--border);
   }
 
-  .metric {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-  }
+  .metric { display: flex; flex-direction: column; gap: 0.1rem; }
 
   .metric-value {
     font-family: 'JetBrains Mono', monospace;
@@ -362,16 +320,9 @@ const tabs = ["Todos", "Backend", "Mobile"];
     border-radius: 4px;
   }
 
-  /* RESPONSIVE */
   @media (max-width: 768px) {
-    .grid {
-      grid-template-columns: 1fr;
-    }
-
-    .tabs {
-      overflow-x: auto;
-      padding-bottom: 0;
-    }
+    .grid { grid-template-columns: 1fr; }
+    .tabs { overflow-x: auto; }
   }
 
   @media (max-width: 480px) {

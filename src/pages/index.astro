@@ -7,21 +7,17 @@ import Stack from '../components/Stack.astro';
 import Projects from '../components/Projects.astro';
 import Certifications from '../components/Certifications.astro';
 import Contact from '../components/Contact.astro';
-
-
-
-
+import { es } from '../i18n/es';
 ---
 
 <Layout>
-  <Navbar />
-
+  <Navbar t={es} lang="es" />
   <main>
-	  <Hero />
-    <About />
-    <Stack />
-    <Projects />
-    <Certifications />
-    <Contact />
+    <Hero t={es} />
+    <About t={es} />
+    <Stack t={es} />
+    <Projects t={es} />
+    <Certifications t={es} />
+    <Contact t={es} />
   </main>
 </Layout>

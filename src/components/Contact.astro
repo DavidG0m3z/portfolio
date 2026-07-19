@@ -1,30 +1,16 @@
 ---
-import {
-  Mail,
-  Linkedin,
-  Github,
-  ArrowRight
-} from "lucide-astro";
+import type { Translations } from '../i18n/es';
 
-const links = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "david.ardilagomez@gmail.com",
-    href: "mailto:david.ardilagomez@gmail.com",
-  },
-  {
-    icon: Linkedin,
-    label: "LinkedIn",
-    value: "linkedin.com/in/d4vidg0mez",
-    href: "https://linkedin.com/in/d4vidg0mez",
-  },
-  {
-    icon: Github,
-    label: "GitHub",
-    value: "github.com/DavidG0m3z",
-    href: "https://github.com/DavidG0m3z",
-  },
+interface Props {
+  t: Translations;
+}
+
+const { t } = Astro.props;
+
+const svgs = [
+  `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>`,
+  `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`,
+  `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>`,
 ];
 ---
 
@@ -32,22 +18,21 @@ const links = [
   <div class="container">
 
     <div class="section-header">
-      <p class="eyebrow">// contact</p>
-      <h2>Hablemos del próximo desafío</h2>
-      <p class="subtitle">
-        Abierto a oportunidades en desarrollo de software.
-        ¿Tienes un proyecto o rol en mente? Escríbeme.
-      </p>
+      <p class="eyebrow">{t.contact.eyebrow}</p>
+      <h2>{t.contact.title}</h2>
+      <p class="subtitle">{t.contact.subtitle}</p>
     </div>
 
+    
+
     <div class="links">
-      {links.map(link => (
+      {t.contact.links.map((link, i) => (
         <a href={link.href} target="_blank" class="link-card">
-          <span class="link-icon"><link.icon size={20} /></span>
-          <div class="link-info">
-            <span class="link-label">{link.label}</span>
-            <span class="link-value">{link.value}</span>
-          </div>
+        <span class="link-icon" set:html={svgs[i]} />
+        <div class="link-info">
+          <span class="link-label">{link.label}</span>
+          <span class="link-value">{link.value}</span>
+        </div>
           <span class="arrow">→</span>
         </a>
       ))}
@@ -59,7 +44,11 @@ const links = [
 <footer>
   <div class="container">
     <span class="logo">David Gómez_</span>
-    <span class="copy">© 2025 · Built with Astro · </span>
+    <span class="copy">{t.footer.copy}</span>
+    <div class="footer-links">
+      <a href="https://github.com/DavidG0m3z" target="_blank">GitHub</a>
+      <a href="https://linkedin.com/in/d4vidg0mez" target="_blank">LinkedIn</a>
+    </div>
   </div>
 </footer>
 
@@ -125,9 +114,11 @@ const links = [
     transform: translateX(4px);
   }
 
-  .link-icon { 
-    font-size: 1.3rem; 
-    color: var(--blue)  
+  .link-icon {
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
   }
 
   .link-info {
@@ -155,9 +146,7 @@ const links = [
     transition: transform 0.2s;
   }
 
-  .link-card:hover .arrow {
-    transform: translateX(4px);
-  }
+  .link-card:hover .arrow { transform: translateX(4px); }
 
   /* FOOTER */
   footer {
@@ -202,7 +191,6 @@ const links = [
 
   .footer-links a:hover { color: var(--blue); }
 
-  /* RESPONSIVE */
   @media (max-width: 480px) {
     section { padding: 4rem 1.25rem; }
 

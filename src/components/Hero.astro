@@ -1,4 +1,11 @@
 ---
+import type { Translations } from '../i18n/es';
+
+interface Props {
+  t: Translations;
+}
+
+const { t } = Astro.props;
 ---
 
 <section id="inicio">
@@ -8,38 +15,28 @@
     <div class="hero-content">
 
       <div class="left">
-        <p class="eyebrow">Software Engineer · Backend · Mobile · Cloud & Data</p>
+        <p class="eyebrow">{t.hero.eyebrow}</p>
 
         <h1>
-          Software Engineer especializado en
-          <span class="accent">backend, arquitecturas distribuidas y soluciones cloud.</span>
+          {t.hero.title1}
+          <span class="accent">{t.hero.title2}</span>
         </h1>
 
-        <p class="description">
-          Construyo APIs robustas y servicios backend escalables con Java y 
-          Node.js. Apasionado por el diseño de sistemas, la automatización 
-          y el análisis de datos como siguiente paso en mi carrera.
-        </p>
+        <p class="description">{t.hero.description}</p>
 
         <div class="ctas">
-          <a href="#proyectos" class="btn-primary">Ver proyectos</a>
-          <a href="#contacto" class="btn-secondary">Contactar</a>
-          <button class="btn-cv" id="open-cv-hero">Ver CV</button>
+          <a href="#proyectos" class="btn-primary">{t.hero.btnProjects}</a>
+          <a href="#contacto" class="btn-secondary">{t.hero.btnContact}</a>
+          <button class="btn-cv" id="open-cv-hero">{t.hero.btnCV}</button>
         </div>
 
         <div class="metrics">
-          <div class="metric">
-            <span class="metric-value">2+</span>
-            <span class="metric-label">años de experiencia</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">5+</span>
-            <span class="metric-label">proyectos completados</span>
-          </div>
-          <div class="metric">
-            <span class="metric-value">3</span>
-            <span class="metric-label">proyectos en producción</span>
-          </div>
+          {t.hero.metrics.map(m => (
+            <div class="metric">
+              <span class="metric-value">{m.value}</span>
+              <span class="metric-label">{m.label}</span>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -50,35 +47,22 @@
               <span class="dot red"></span>
               <span class="dot yellow"></span>
               <span class="dot green"></span>
-              <span class="terminal-title">deividDev</span>
+              <span class="terminal-title">{t.hero.terminalTitle}</span>
             </div>
             <div class="photo-container">
-              <img src="/foto-portfolio.jpg"/>
+              <img src="/foto-portfolio.jpg" alt="David Gómez" />
             </div>
           </div>
           <div class="tech-tags">
-            <span>Medellín, Colombia</span>
-            <span class="tag-available">Disponible</span>
-            <span class="tag-remote">Híbrido / Remoto</span>
+            <span>{t.hero.tags.location}</span>
+            <span class="tag-available">{t.hero.tags.available}</span>
+            <span class="tag-remote">{t.hero.tags.remote}</span>
           </div>
         </div>
       </div>
 
     </div>
   </div>
-
-  <script is:inline>
-  document.addEventListener('DOMContentLoaded', function () {
-    const btn = document.getElementById('open-cv-hero');
-    if (btn) {
-      btn.addEventListener('click', function () {
-        document.getElementById('cv-modal').classList.add('open');
-      });
-    }
-  });
-</script>
-
-
 </section>
 
 <script is:inline>
@@ -213,6 +197,14 @@
     resize();
     draw();
     window.addEventListener('resize', resize);
+
+    // Botón Ver CV en Hero
+    const btnHero = document.getElementById('open-cv-hero');
+    if (btnHero) {
+      btnHero.addEventListener('click', function () {
+        document.getElementById('cv-modal').classList.add('open');
+      });
+    }
   });
 </script>
 
@@ -303,11 +295,33 @@
     text-decoration: none;
     font-size: 0.95rem;
     transition: border-color 0.2s, color 0.2s;
+    background: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
   }
 
   .btn-secondary:hover {
     border-color: var(--blue);
     color: var(--blue);
+  }
+
+  .btn-cv {
+    background: none;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.7rem 1.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+
+  .btn-cv:hover {
+    background: var(--green);
+    color: #080B0F;
   }
 
   .metrics {
@@ -316,10 +330,7 @@
     flex-wrap: wrap;
   }
 
-  .metric {
-    display: flex;
-    flex-direction: column;
-  }
+  .metric { display: flex; flex-direction: column; }
 
   .metric-value {
     font-family: 'Space Grotesk', sans-serif;
@@ -366,7 +377,7 @@
   }
 
   .dot.red    { background: #FF5F57; }
-  .dot.yellow { background: #ffc74d; }
+  .dot.yellow { background: #FEBC2E; }
   .dot.green  { background: #28C840; }
 
   .terminal-title {
@@ -389,22 +400,6 @@
     object-position: center top;
   }
 
-  .placeholder-photo {
-    width: 100%;
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #0F1318 0%, #161B22 100%);
-  }
-
-  .placeholder-photo span {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 4rem;
-    font-weight: 700;
-    color: var(--border);
-  }
-
   .tech-tags {
     display: flex;
     gap: 0.5rem;
@@ -415,27 +410,21 @@
   .tech-tags span {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.72rem;
-    color: var(--blue);
-    border: 1px solid rgba(88, 166, 255, 0.3);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
     padding: 0.2rem 0.6rem;
     border-radius: 4px;
   }
 
   .tag-available {
-    color: var(--neon) !important;
+    color: var(--green) !important;
     border-color: rgba(63, 185, 80, 0.4) !important;
   }
 
   .tag-remote {
-    color: var(--volt) !important;
+    color: var(--blue) !important;
     border-color: rgba(88, 166, 255, 0.4) !important;
   }
-
-  .tag-city {
-    color: var(--ice) !important;
-    border-color: rgba(88, 166, 255, 0.4) !important;
-  }
-
 
   @media (max-width: 768px) {
     .hero-content {
@@ -458,29 +447,10 @@
     .ctas { flex-direction: column; }
 
     .btn-primary,
-    .btn-secondary { text-align: center; }
+    .btn-secondary,
+    .btn-cv { text-align: center; }
 
     .metrics { gap: 1.25rem; }
-
     .metric-value { font-size: 1.4rem; }
   }
-
-  .btn-cv {
-  background: none;
-  border: 1px solid var(--green);
-  color: var(--green);
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  padding: 0.7rem 1.6rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-  white-space: nowrap;
-}
-
-.btn-cv:hover {
-  background: var(--green);
-  color: #080B0F;
-}
 </style>

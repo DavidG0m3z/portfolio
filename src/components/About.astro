@@ -1,32 +1,14 @@
 ---
-import { Code, Database, GitBranch, Users, GraduationCap, BookOpen, Brain  } from 'lucide-astro';
+import { Code, Database, GitBranch, Users, GraduationCap, BookOpen, Brain } from '@lucide/astro';
+import type { Translations } from '../i18n/es';
 
-const facts = [
-  {
-    icon: GraduationCap,
-    text: "Ingeniero de Sistemas de la Universidad de Antioquia, enfocado en el desarrollo backend, las arquitecturas escalables y los sistemas distribuidos.",
-  },
-  {
-    icon: Code,
-    text: "Me apasiona entender cómo los sistemas evolucionan y escalan para responder a las demandas del negocio.",
-  },
-  {
-    icon: GitBranch,
-    text: "Disfruto especialmente el diseño de arquitecturas y la planificación técnica de soluciones de software.",
-  },
-  {
-    icon: Users,
-    text: "Valoro el trabajo colaborativo y el intercambio de ideas, ya que las mejores soluciones suelen surgir de la construcción colectiva y la discusión técnica.",
-  },
-  {
-    icon: Brain,
-    text: "Mantengo una práctica constante de resolución de problemas y retos de programación para fortalecer el pensamiento algorítmico y las habilidades de análisis.",
-  },
-  {
-    icon: Database,
-    text: "Creo en el valor estratégico de los datos, me interesa la Ingeniería de Datos y el Machine Learning.",
-  },
-];
+interface Props {
+  t: Translations;
+}
+
+const { t } = Astro.props;
+
+const icons = [Code, Database, GitBranch, Users, GraduationCap, BookOpen, Brain];
 ---
 
 <section id="sobre-mi">
@@ -34,23 +16,22 @@ const facts = [
     <div class="grid">
 
       <div class="left">
-        <p class="eyebrow">// about me</p>
-        <h2>Sobre mí</h2>
-        <p class="tagline">
-          Desarrollador de software junior con mentalidad de senior.
-        </p>
+        <p class="eyebrow">{t.about.eyebrow}</p>
+        <h2>{t.about.title}</h2>
+        <p class="tagline">{t.about.tagline}</p>
       </div>
 
       <div class="right">
         <ul>
-          {facts.map(fact => (
-            <li>
-              <span class="icon">
-                <fact.icon size={18} />
-              </span>
-              <span class="text">{fact.text}</span>
-            </li>
-          ))}
+          {t.about.facts.map((fact, i) => {
+            const Icon = icons[i % icons.length];
+            return (
+              <li>
+                <span class="icon"><Icon size={18} /></span>
+                <span class="text">{fact}</span>
+              </li>
+            );
+          })}
         </ul>
       </div>
 

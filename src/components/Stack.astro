@@ -1,126 +1,39 @@
 ---
-import { 
-  Code2, Server, Smartphone, Cloud, Database, 
+import {
+  Code2, Server, Smartphone, Cloud, Database,
   Layout, TestTube, BarChart2, Cpu, Shield,
   GitBranch, Monitor, Layers, Workflow
-} from 'lucide-astro';
+} from '@lucide/astro';
+import type { Translations } from '../i18n/es';
 
-const languages = ["Java", "TypeScript", "JavaScript", "C#", "Kotlin", "Python", "SQL"];
+interface Props {
+  t: Translations;
+}
 
-const groups = [
-  {
-    category: "Backend",
-    icon: Server,
-    items: [
-      { name: "Spring Boot", level: 4 },
-      { name: "NestJS", level: 4 },
-      { name: "Express", level: 4 },
-      { name: ".NET", level: 3 },
-    ],
-  },
-  {
-    category: "Mobile",
-    icon: Smartphone,
-    items: [
-      { name: "React Native", level: 4 },
-      { name: "Kotlin (Jetpack Compose)", level: 2 },
-    ],
-  },
-  {
-    category: "Frontend",
-    icon: Layout,
-    items: [
-      { name: "React", level: 3 },
-      { name: "Astro", level: 2 },
-    ],
-  },
-  {
-    category: "Cloud & DevOps",
-    icon: Cloud,
-    items: [
-      { name: "Docker", level: 3 },
-      { name: "Kubernetes", level: 2 },
-      { name: "GitHub Actions", level: 4 },
-      { name: "AWS", level: 3 },
-      { name: "Azure", level: 2 },
-      { name: "Linux", level: 4 },
-    ],
-  },
-  {
-    category: "Bases de Datos",
-    icon: Database,
-    items: [
-      { name: "PostgreSQL", level: 4 },
-      { name: "MariaDB / MySQL", level: 4 },
-      { name: "MongoDB", level: 3 },
-      { name: "Redis", level: 2 },
-      { name: "JPA / Hibernate", level: 4 },
-      { name: "TypeORM", level: 4 },
-    ],
-  },
-  {
-    category: "Testing",
-    icon: TestTube,
-    items: [
-      { name: "JUnit", level: 4 },
-      { name: "Mockito", level: 4 },
-      { name: "Jest", level: 4 },
-      { name: "Vitest", level: 4 },
-      { name: "SonarQube", level: 3 },
-      { name: "Postman", level: 4 },
-    ],
-  },
-  {
-    category: "Data",
-    icon: BarChart2,
-    items: [
-      { name: "Pandas", level: 3 },
-      { name: "Matplotlib", level: 2 },
-      { name: "Seaborn", level: 2 },
-      { name: "Scikit-learn", level: 2 },
-    ],
-  },
-  {
-    category: "IA",
-    icon: BarChart2,
-    items: [
-      { name: "Claude Code", level: 3 },
-      { name: "GitHub Copilot", level: 2 },
-      { name: "Open Code", level: 2 },
-    ],
-  },
-];
+const { t } = Astro.props;
+const groups = t.stack.groups.map((g, i) => ({
+  ...g,
+  icon: [Server, Smartphone, Layout, Cloud, Database, TestTube, BarChart2, BarChart2][i],
+}));
+const languages = t.stack.languages;
 
-const specialties = [
-  { icon: Code2,     label: "REST APIs",         desc: "Diseño, versionado y documentación con Swagger" },
-  { icon: Monitor,   label: "Cliente-Servidor",   desc: "HTTP, stateless, separación de responsabilidades" },
-  { icon: Layers,    label: "Microservicios",     desc: "Spring Cloud, Gateway, Eureka, comunicación entre servicios" },
-  { icon: Shield,    label: "Seguridad",          desc: "JWT, AWS IAM, autenticación y autorización, Top 10 OWASP" },
-  { icon: Database,  label: "Diseño de BD",       desc: "Relacional, NoSQL, índices, maestro/esclavo" },
-  { icon: Smartphone,label: "Apps Móviles",       desc: "React Native, Android nativo con Jetpack Compose" },
-  { icon: GitBranch,  label: "System Design",       desc: "Diseño de sistemas escalables, diagramas de arquitectura y componentes" },
-  { icon: Cpu,        label: "Linux",               desc: "Administración, scripting y entornos de servidor" },
-  { icon: Workflow, label: "CI/CD", desc: "GitHub Actions, pipelines automatizados y despliegue continuo" },
-
-];
+const specialtyIcons = [Code2, Monitor, Layers, Shield, Database, Smartphone, GitBranch, Cpu, Workflow];
 ---
 
 <section id="stack">
   <div class="container">
 
     <div class="section-header">
-      <p class="eyebrow">// tech stack</p>
-      <h2>Ecosistema Tecnológico</h2>
+      <p class="eyebrow">{t.stack.eyebrow}</p>
+      <h2>{t.stack.title}</h2>
     </div>
 
-    <!-- LENGUAJES -->
     <div class="languages">
       {languages.map(lang => (
         <span class="lang-badge">{lang}</span>
       ))}
     </div>
 
-    <!-- GRUPOS -->
     <div class="grid">
       {groups.map(group => (
         <div class="card">
@@ -130,25 +43,27 @@ const specialties = [
           </div>
           <ul>
             {group.items.map(item => (
-              <li>
-                <span class="name">{item.name}</span>
-              </li>
+              <li><span class="name">{item}</span></li>
             ))}
           </ul>
         </div>
       ))}
     </div>
 
-    <!-- ESPECIALIDADES -->
     <div class="specialties-header">
-      <p class="eyebrow">// specialties</p>
-      <h2>Especialidades</h2>
+      <p class="eyebrow">{t.stack.specialtiesEyebrow}</p>
+      <h2>{t.stack.specialtiesTitle}</h2>
     </div>
 
     <div class="specialties">
-      {specialties.map(s => (
+      {t.stack.specialties.map((s, i) => (
         <div class="specialty">
-          <span class="s-icon"><s.icon size={20} /></span>
+          <span class="s-icon">
+            {(() => {
+              const Icon = specialtyIcons[i % specialtyIcons.length];
+              return <Icon size={20} />;
+            })()}
+          </span>
           <div class="s-info">
             <span class="s-label">{s.label}</span>
             <span class="s-desc">{s.desc}</span>
@@ -177,9 +92,7 @@ const specialties = [
     margin-bottom: 2rem;
   }
 
-  .specialties-header {
-    margin-top: 4rem;
-  }
+  .specialties-header { margin-top: 4rem; }
 
   .eyebrow {
     font-family: 'JetBrains Mono', monospace;
@@ -203,7 +116,6 @@ const specialties = [
     margin-top: 0.5rem;
   }
 
-  /* LENGUAJES */
   .languages {
     display: flex;
     flex-wrap: wrap;
@@ -227,7 +139,6 @@ const specialties = [
     color: var(--blue);
   }
 
-  /* GRID */
   .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -269,7 +180,6 @@ const specialties = [
   li {
     padding: 0.45rem 0;
     border-bottom: 1px solid var(--border);
-
   }
 
   li:last-child { border-bottom: none; }
@@ -280,21 +190,6 @@ const specialties = [
     color: var(--text-muted);
   }
 
-  .dots {
-    display: flex;
-    gap: 4px;
-  }
-
-  .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--border);
-  }
-
-  .dot.active { background: var(--blue); }
-
-  /* ESPECIALIDADES */
   .specialties {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -340,7 +235,6 @@ const specialties = [
     line-height: 1.5;
   }
 
-  /* RESPONSIVE */
   @media (max-width: 900px) {
     .grid,
     .specialties {
@@ -351,10 +245,9 @@ const specialties = [
   @media (max-width: 480px) {
     section { padding: 4rem 1.25rem; }
     h2 { font-size: 1.6rem; }
-
     .grid,
     .specialties {
       grid-template-columns: 1fr;
     }
   }
-</style>  
+</style>

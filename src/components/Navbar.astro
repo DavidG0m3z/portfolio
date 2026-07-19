@@ -1,26 +1,32 @@
 ---
-const links = [
-  { label: "Inicio",          href: "#inicio" },
-  { label: "Sobre mí",        href: "#sobre-mi" },
-  { label: "Stack",           href: "#stack" },
-  { label: "Proyectos",       href: "#proyectos" },
-  { label: "Certificaciones", href: "#certificaciones" },
-  { label: "Contacto",        href: "#contacto" },
-];
+import type { Translations } from '../i18n/es';
+
+interface Props {
+  t: Translations;
+  lang: string;
+}
+
+const { t, lang } = Astro.props;
 ---
 
 <header>
   <nav>
-    <span class="logo">David Gómez_</span>
+    <a href={lang === 'en' ? '/en' : '/'} class="logo">David Gómez_</a>
 
     <ul>
-      {links.map(link => (
+      {t.navbar.links.map(link => (
         <li><a href={link.href}>{link.label}</a></li>
       ))}
     </ul>
 
     <div class="cv-buttons">
-      <button class="btn-view" id="open-cv">Ver CV</button>
+      <button class="btn-view" id="open-cv">{t.navbar.viewCV}</button>
+    </div>
+
+    <div class="lang-switch">
+      <a href="/" class={lang === 'es' ? 'active' : ''}>ES</a>
+      <span>|</span>
+      <a href="/en" class={lang === 'en' ? 'active' : ''}>EN</a>
     </div>
 
     <button class="menu-toggle" id="menu-toggle" aria-label="Menú">
@@ -31,11 +37,16 @@ const links = [
   </nav>
 
   <div class="mobile-menu" id="mobile-menu">
-    {links.map(link => (
+    {t.navbar.links.map(link => (
       <a href={link.href} class="mobile-link">{link.label}</a>
     ))}
-    <div class="mobile-cv">
-      <button class="btn-view" id="open-cv-mobile">Ver CV</button>
+    <div class="mobile-bottom">
+      <button class="btn-view" id="open-cv-mobile">{t.navbar.viewCV}</button>
+      <div class="lang-switch-mobile">
+        <a href="/" class={lang === 'es' ? 'active' : ''}>ES</a>
+        <span>|</span>
+        <a href="/en" class={lang === 'en' ? 'active' : ''}>EN</a>
+      </div>
     </div>
   </div>
 </header>
@@ -44,20 +55,20 @@ const links = [
 <div class="modal-overlay" id="cv-modal">
   <div class="modal">
     <div class="modal-header">
-      <span class="modal-title">David Gómez — CV</span>
+      <span class="modal-title">{t.navbar.cvModalTitle}</span>
       <div class="modal-actions">
-        <a href="/resume.pdf" download class="modal-download">
+        <a href={t.navbar.cvFile} download class="modal-download">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 4h14v-2H5v2z"/>
           </svg>
-          Descargar
+          {t.navbar.download}
         </a>
         <button class="modal-close" id="close-cv" aria-label="Cerrar">✕</button>
       </div>
     </div>
     <div class="modal-body">
-      <object data="/resume.pdf" type="application/pdf">
-        <p>Tu navegador no puede mostrar el PDF. <a href="/resume.pdf" download>Descárgalo aquí</a></p>
+      <object data={t.navbar.cvFile} type="application/pdf">
+        <p><a href={t.navbar.cvFile} download>Descargar PDF</a></p>
       </object>
     </div>
   </div>
@@ -72,13 +83,8 @@ const links = [
     const toggle     = document.getElementById('menu-toggle');
     const menu       = document.getElementById('mobile-menu');
 
-    function openModal() {
-      modal.classList.add('open');
-    }
-
-    function closeModal() {
-      modal.classList.remove('open');
-    }
+    function openModal() { modal.classList.add('open'); }
+    function closeModal() { modal.classList.remove('open'); }
 
     openBtn.addEventListener('click', openModal);
     if (openMobile) openMobile.addEventListener('click', openModal);
@@ -136,6 +142,7 @@ const links = [
     color: var(--text);
     white-space: nowrap;
     flex-shrink: 0;
+    text-decoration: none;
   }
 
   ul {
@@ -174,30 +181,34 @@ const links = [
     white-space: nowrap;
   }
 
-  .btn-view:hover {
-    background: rgba(88, 166, 255, 0.1);
-  }
+  .btn-view:hover { background: rgba(88, 166, 255, 0.1); }
 
-  .btn-download {
+  /* LANG SWITCH */
+  .lang-switch {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    background: var(--blue);
-    color: #080B0F;
+    flex-shrink: 0;
+  }
+
+  .lang-switch a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    transition: color 0.2s;
+  }
+
+  .lang-switch a.active {
+    color: var(--blue);
     font-weight: 600;
-    font-size: 0.78rem;
-    padding: 0.3rem 0.75rem;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: opacity 0.2s;
-    white-space: nowrap;
   }
 
-  .btn-download:hover {
-    opacity: 0.85;
-    color: #080B0F;
+  .lang-switch span {
+    color: var(--border);
+    font-size: 0.7rem;
   }
 
+  /* HAMBURGER */
   .menu-toggle {
     display: none;
     flex-direction: column;
@@ -218,18 +229,11 @@ const links = [
     transition: transform 0.3s, opacity 0.3s;
   }
 
-  .menu-toggle.open span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
-  }
+  .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-toggle.open span:nth-child(2) { opacity: 0; }
+  .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-  .menu-toggle.open span:nth-child(2) {
-    opacity: 0;
-  }
-
-  .menu-toggle.open span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
-  }
-
+  /* MOBILE MENU */
   .mobile-menu {
     display: none;
     flex-direction: column;
@@ -249,18 +253,31 @@ const links = [
 
   .mobile-link:hover { color: var(--blue); }
 
-  .mobile-cv {
+  .mobile-bottom {
     display: flex;
-    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
     margin-top: 1rem;
   }
 
-  .mobile-cv .btn-view,
-  .mobile-cv .btn-download {
-    flex: 1;
-    justify-content: center;
-    text-align: center;
+  .lang-switch-mobile {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
   }
+
+  .lang-switch-mobile a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .lang-switch-mobile a.active {
+    color: var(--blue);
+    font-weight: 600;
+  }
+
+  .lang-switch-mobile span { color: var(--border); }
 
   /* MODAL */
   .modal-overlay {
@@ -324,10 +341,7 @@ const links = [
     transition: opacity 0.2s;
   }
 
-  .modal-download:hover {
-    opacity: 0.85;
-    color: #080B0F;
-  }
+  .modal-download:hover { opacity: 0.85; color: #080B0F; }
 
   .modal-close {
     background: none;
@@ -344,10 +358,7 @@ const links = [
     transition: border-color 0.2s, color 0.2s;
   }
 
-  .modal-close:hover {
-    border-color: var(--blue);
-    color: var(--text);
-  }
+  .modal-close:hover { border-color: var(--blue); color: var(--text); }
 
   .modal-body {
     position: relative;
@@ -357,7 +368,7 @@ const links = [
 
   .modal-body object {
     position: absolute;
-    top: 0; 
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
@@ -368,15 +379,12 @@ const links = [
   @media (max-width: 900px) {
     ul { display: none; }
     .cv-buttons { display: none; }
+    .lang-switch { display: none; }
     .menu-toggle { display: flex; }
   }
 
   @media (max-width: 768px) {
-    .modal {
-      width: 100%;
-      height: 100vh;
-      border-radius: 0;
-    }
+    .modal { width: 100%; height: 100vh; border-radius: 0; }
   }
 
   @media (max-width: 380px) {

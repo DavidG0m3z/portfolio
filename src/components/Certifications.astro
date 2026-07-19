@@ -1,54 +1,43 @@
 ---
-import { Award, BookOpen, Eye, CheckCircle, Clock } from 'lucide-astro';
+import { Award, BookOpen, Eye, CheckCircle, Clock } from '@lucide/astro';
+import type { Translations } from '../i18n/es';
 
-const certifications = [
-  {
-    name: "Red Hat System Administration I (RH124) (RH124-8.2)",
-    issuer: "Red Hat",
-    status: "obtained",
-    pdf: "/certifications/redhat-linux.pdf",
-  },
-  {
-    name: "AWS Certified Solutions Architect – Associate (SAA-C03)",
-    issuer: "Amazon Web Services",
-    status: "wip",
-    pdf: null,
-  },
-];
+interface Props {
+  t: Translations;
+}
 
-const learning = [
-  { name: "Spring Professional", platform: "VMware" },
-  { name: "System Design", platform: "ByteByteGo" },
-];
+const { t } = Astro.props;
+
+const certifications = t.certifications.certs;
+const learning = t.certifications.learning;
+
 ---
 
 <section id="certificaciones">
   <div class="container">
 
     <div class="section-header">
-      <p class="eyebrow">// certifications</p>
-      <h2>Certificaciones</h2>
+      <p class="eyebrow">{t.certifications.eyebrow}</p>
+      <h2>{t.certifications.title}</h2>
     </div>
 
     <div class="certs-grid">
       {certifications.map(cert => (
         <div class={`cert-card ${cert.status === 'wip' ? 'wip' : ''}`}>
           <div class="cert-left">
-            <div class="cert-icon">
-              <Award size={20} />
-            </div>
+            <div class="cert-icon"><Award size={20} /></div>
             <div class="cert-info">
               <h3>{cert.name}</h3>
               <p>{cert.issuer}</p>
               {cert.status === 'obtained' ? (
                 <span class="badge-obtained">
                   <CheckCircle size={11} />
-                  Obtenida
+                  {t.certifications.obtained}
                 </span>
               ) : (
                 <span class="badge-wip">
                   <Clock size={11} />
-                  En progreso
+                  {t.certifications.wip}
                 </span>
               )}
             </div>
@@ -68,8 +57,8 @@ const learning = [
     </div>
 
     <div class="learning-header">
-      <p class="eyebrow">// continuous learning</p>
-      <h2>Aprendizaje Continuo</h2>
+      <p class="eyebrow">{t.certifications.learningEyebrow}</p>
+      <h2>{t.certifications.learningTitle}</h2>
     </div>
 
     <div class="learning-grid">
@@ -81,7 +70,7 @@ const learning = [
           </div>
           <span class="badge-wip">
             <Clock size={11} />
-            En curso
+            {t.certifications.inProgress}
           </span>
         </div>
       ))}
@@ -100,13 +89,15 @@ const learning = [
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 4h14v-2H5v2z"/>
           </svg>
-          Descargar
+          {t.certifications.certModalDownload}
         </a>
         <button class="modal-close" id="close-cert" aria-label="Cerrar">✕</button>
       </div>
     </div>
     <div class="modal-body">
-      <iframe id="cert-modal-iframe" src="" title="Certificado"></iframe>
+      <object id="cert-modal-object" data="" type="application/pdf">
+        <p><a href="#" id="cert-modal-fallback" download>Descargar PDF</a></p>
+      </object>
     </div>
   </div>
 </div>
@@ -114,23 +105,25 @@ const learning = [
 <script is:inline>
   document.addEventListener('DOMContentLoaded', function () {
     const modal    = document.getElementById('cert-modal');
-    const iframe   = document.getElementById('cert-modal-iframe');
+    const obj      = document.getElementById('cert-modal-object');
     const title    = document.getElementById('cert-modal-title');
     const download = document.getElementById('cert-modal-download');
+    const fallback = document.getElementById('cert-modal-fallback');
     const closeBtn = document.getElementById('close-cert');
     const btns     = document.querySelectorAll('.btn-eye');
 
     function openModal(pdf, name) {
-      iframe.src = pdf;
+      obj.data = pdf;
       title.textContent = name;
       download.href = pdf;
       download.setAttribute('download', name + '.pdf');
+      fallback.href = pdf;
       modal.classList.add('open');
     }
 
     function closeModal() {
       modal.classList.remove('open');
-      iframe.src = '';
+      obj.data = '';
     }
 
     btns.forEach(btn => {
@@ -140,11 +133,9 @@ const learning = [
     });
 
     closeBtn.addEventListener('click', closeModal);
-
     modal.addEventListener('click', function (e) {
       if (e.target === modal) closeModal();
     });
-
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeModal();
     });
@@ -192,7 +183,6 @@ const learning = [
     margin-top: 0.5rem;
   }
 
-  /* CERTS */
   .certs-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -224,10 +214,7 @@ const learning = [
     gap: 1rem;
   }
 
-  .cert-icon {
-    color: var(--blue);
-    flex-shrink: 0;
-  }
+  .cert-icon { color: var(--blue); flex-shrink: 0; }
 
   .cert-info {
     display: flex;
@@ -294,7 +281,6 @@ const learning = [
     color: var(--blue);
   }
 
-  /* LEARNING */
   .learning-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -337,7 +323,6 @@ const learning = [
     z-index: 999;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
     backdrop-filter: blur(4px);
   }
 
@@ -346,13 +331,13 @@ const learning = [
   .modal {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    width: 100%;
-    max-width: 860px;
-    max-height: 90vh;
+    width: 90%;
+    max-width: 900px;
+    height: 90vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    border-radius: 10px;
   }
 
   .modal-header {
@@ -391,10 +376,7 @@ const learning = [
     transition: opacity 0.2s;
   }
 
-  .modal-download:hover {
-    opacity: 0.85;
-    color: #080B0F;
-  }
+  .modal-download:hover { opacity: 0.85; color: #080B0F; }
 
   .modal-close {
     background: none;
@@ -411,37 +393,31 @@ const learning = [
     transition: border-color 0.2s, color 0.2s;
   }
 
-  .modal-close:hover {
-    border-color: var(--blue);
-    color: var(--text);
-  }
+  .modal-close:hover { border-color: var(--blue); color: var(--text); }
 
   .modal-body {
+    position: relative;
     flex: 1;
-    overflow: hidden;
+    min-height: 0;
   }
 
-  .modal-body iframe {
+  .modal-body object {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    min-height: 70vh;
     border: none;
   }
 
-  /* RESPONSIVE */
   @media (max-width: 768px) {
     .certs-grid,
-    .learning-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .modal { max-height: 95vh; }
-    .modal-body iframe { min-height: 75vh; }
+    .learning-grid { grid-template-columns: 1fr; }
+    .modal { width: 100%; height: 100vh; border-radius: 0; }
   }
 
   @media (max-width: 480px) {
     section { padding: 4rem 1.25rem; }
     h2 { font-size: 1.6rem; }
-    .modal-overlay { padding: 0.75rem; }
   }
 </style>
